@@ -1,6 +1,6 @@
 # Ex-4-GENERATION OF LEXICAL TOKENS LEX FLEX TOOL
 # AIM
-## To write a lex program to implement lexical analyzer to recognize a few patterns.
+To write a lex program to implement lexical analyzer to recognize a few patterns.
 # ALGORITHM
 
 1.	Start the program.
@@ -32,6 +32,83 @@
 7.	Compile that file with C compiler and verify the output.
 
 # INPUT
+```
+$vi var.c
+#include<stdio.h>
+main()
+{
+int a,b;
+}
+```
+```
+/* program name is lexp.l */
+%{
+/* program to recognize a c program */
+int COMMENT=0;
+%}
+identifier [a-zA-Z][a-zA-Z0-9]*
+%%
+#.* { printf("\n%s is a PREPROCESSOR DIRECTIVE",yytext);}
+int |
+float |
+char |
+double |
+while |
+for |
+do |
+if |
+break |
+continue |
+void |
+switch |
+case |
+long |
+struct |
+const |
+typedef |
+return |
+else |
+goto {printf("\n\t%s is a KEYWORD",yytext);}
+"/*" {COMMENT = 1;}
+"*/" {COMMENT = 0;}
+{identifier}\( {if(!COMMENT)printf("\n\nFUNCTION\n\t%s",yytext);}
+\{ {if(!COMMENT) printf("\n BLOCK BEGINS");}
+\} {if(!COMMENT) printf("\n BLOCK ENDS");}
+{identifier}(\[[0-9]*\])? {if(!COMMENT) printf("\n %s IDENTIFIER",yytext);}
+\".*\" {if(!COMMENT) printf("\n\t%s is a STRING",yytext);}
+[0-9]+ {if(!COMMENT) printf("\n\t%s is a NUMBER",yytext);}
+\)(\;)? {if(!COMMENT) printf("\n\t");ECHO;printf("\n");}
+\( ECHO;
+= {if(!COMMENT)printf("\n\t%s is an ASSIGNMENT OPERATOR",yytext);}
+\<= |
+\>= |
+\< |
+== |
+\> {if(!COMMENT) printf("\n\t%s is a RELATIONAL OPERATOR",yytext);}
+%%
+int main(int argc,char **argv)
+{
+if (argc > 1)
+{
+FILE *file;
+file = fopen(argv[1],"r");
+if(!file)
+{
+printf("could not open %s \n",argv[1]);
+exit(0);
+}
+yyin = file;
+}
+yylex();
+printf("\n\n");
+return 0;
+} int yywrap()
+{
+return 0;
+}
+```
 # OUTPUT
+![image](https://github.com/mathes6112004/Ex-4---GENERATION-OF-LEXICAL-TOKENS-LEX-FLEX-TOOL/assets/119477782/aaf36f8b-982c-4450-ba69-cb1a335f8f8b)
+
 # RESULT
-## The lexical analyzer is implemented using lex and the output is verified.
+The lexical analyzer is implemented using lex and the output is verified.
